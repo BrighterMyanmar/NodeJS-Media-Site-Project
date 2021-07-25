@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 const catRouter = require('./routes/category');
 const userRouter = require('./routes/user');
 
+
 app.use('/cats', catRouter);
 app.use('/user',userRouter);
 

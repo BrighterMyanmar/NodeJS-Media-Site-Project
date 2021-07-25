@@ -1,5 +1,6 @@
 const UserDB = require('../models/user');
 const Helper = require('../utils/helper');
+const RedisDB = require('../utils/redis');
 
 let register = async (req, res) => {
 
@@ -18,6 +19,7 @@ let register = async (req, res) => {
             Helper.fMsg(res, "User Created", result);
         }
     }
+
 }
 
 let login = async (req, res) => {
@@ -25,7 +27,11 @@ let login = async (req, res) => {
     if (phoneUser) {
         let con = Helper.comparePass(req.body.password, phoneUser.password);
         if (con) {
-            let token = Helper.makeToken({ "_id": phoneUser._id, "email": phoneUser.email, "phone": phoneUser.phone });
+            RedisDB.setObject(phoneUser._id,phoneUser);
+            let token = Helper.makeToken({
+                 "_id": phoneUser._id, 
+                 "email": phoneUser.email, 
+                 "phone": phoneUser.phone });
             phoneUser.token = token;
             phoneUser.password = undefined;
             res.send({"con":true,"msg":"Login Success",result:phoneUser,token});
@@ -36,7 +42,11 @@ let login = async (req, res) => {
         res.send({ "con": false, "msg": "No user with that phone!" });
     }
 }
+let test = (req,res,next) => {
+    res.send({msg:"We are good to go!"});
+}
 module.exports = {
     register,
-    login
+    login,
+    test
 }
