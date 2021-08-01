@@ -8,7 +8,8 @@ const fileUpload = require('express-fileupload');
 mongoose.connect(`mongodb://localhost:27017/${process.env.db_name}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex : true
+    useCreateIndex : true,
+    useFindAndModify:false
 });
 
 app.use(bodyParser.json());
@@ -17,10 +18,16 @@ app.use(fileUpload());
 const catRouter = require('./routes/category');
 const userRouter = require('./routes/user');
 const productRouter = require('./routes/product');
+const subcartRouter = require('./routes/subcat');
+const roleRouter = require('./routes/role');
+const permitRouter = require('./routes/permit');
 
 app.use('/cats', catRouter);
+app.use('/subcat',subcartRouter);
 app.use('/user',userRouter);
 app.use('/product',productRouter);
+app.use('/role',roleRouter);
+app.use('/permit',permitRouter);
 
 
 app.get("*",(req,res)=>{
